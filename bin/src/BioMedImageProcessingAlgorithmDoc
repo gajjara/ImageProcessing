@@ -1,0 +1,44 @@
+Explanation of BioMed Image Processing Algorithm
+
+Algorithm Steps and Details
+	1) 	Extract Dicom Image (MATLAB)
+	2) 	Convert Dicom Image to png (MATLAB)
+	3) 	Run converted dicom image through Sobel Edge Detection Algorithm (Java)
+		a) Source: https://en.wikipedia.org/wiki/Sobel_operator
+	4) 	Overlay edge detected image onto original image by averaging the intensities
+		of both the edge detected image and original image (Java)
+	5) 	Normalize the overlayed image using adaptive normalization (Java)
+		a) 	Normalization algorithm steps
+			1)	Calculate the histogram (PDF) of the image
+			2)	Calculate the CDF of the image (from the histogram)	
+			3) 	Calculate the adaptive normalization value or use specified normalization value
+			4) 	Apply normalization using normalization value and normalization function
+				a)	Normalization function is: hv[intensity] = 1 + (256 - 2)*(cdf[intensity] - cdf_min)/(number_of_pixels - cdf_min)
+				b) 	Source: https://en.wikipedia.org/wiki/Histogram_equalization
+		b)	Adaptive Normalization calculation steps
+			1) 	Loop through all possible intensities for normalization
+			2) 	Normalize data for each possible intensity
+			3) 	Get histogram of that normalized data
+			4) 	Compare that histogram with an ideal histogram of normal distribution of intensities
+			5)	Comparision is done by calculating a KL divergence for the normalization histogram 
+				and ideal histogram
+			6) 	The intensity value with the lowest KL divergence value is used as the normalization value
+				a) 	This intensity value indiciates that the least amount of data would be lost if
+					an image with the calculated histogram replaces an image with the 
+					histogram of the ideal histogram
+			7) 	Source: https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+	6) 	Normalize the adaptively normalized image with a normalization value of 216 (Java)
+		a) 	This value indicates that 84.375% of maximum intensity (of 256) will be reached
+		b) 	This value is the ideal value that does not degrade constrast or resolution, but 
+			increases the overall exposure and brightness of the image (without making the
+			image too bright)
+	7) 	Threshold the image with a threshold value equal to 4/5 of the normalization value above (Java)
+		a)  Since the double normalization seperated most of the noise and actual data this threshold
+			value was found to keep most of the actual data while getting rid of most of the noise
+		b) 	Essentially this was the ideal threshold value 
+	8) 	Write the final image onto a .png image file (Java)
+	9) 	Use the volshow() function in MATLAB for all the final images to get a 3D construction
+		from the CT images (MATLAB) 
+	10) 	Use MATLAB to create a video showing the construction of the 3D image (MATLAB)
+	
+
