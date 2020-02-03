@@ -1,7 +1,7 @@
 # ImageProcessing
 An image processing library that I have started to develop (still in development), this is version 1.0.
 
-This image processing library was used for my rapid 3D imaging project.
+This image processing library was used for <a href="https://gajjara.github.io/3d_image/">my rapid 3D imaging project</a>.
 
 This library currently includes:
 - A folder containing an image read and write library, and a small applet to view an image
